@@ -13,15 +13,16 @@ This project implements a basic student management system using Python and Postg
 - psycopg2
 
 ## Structure
-project_root/ 
-            ├── db/ │   
-                    ├── connection.py │
-                    └── schema.py 
-            ├── models/ 
-                    │  
-                    └── student.py 
-            ├── main.py 
-            └── README.md
+COMP3005_Assignment3/
+├── db/
+│   ├── connection.py       # Handles database connection setup
+│   └── schema.py           # Creates tables and inserts initial data
+│
+├── models/
+│   └── student.py          # CRUD operations for the students table
+│
+├── main.py                 # Menu-driven interface to interact with the system
+└── README.md               # Project overview and setup instructions
 
 ## How to Run
 
