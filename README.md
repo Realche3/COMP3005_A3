@@ -42,3 +42,6 @@ CREATE DATABASE your_database_name;
 - Create and initialize `students` table  
 - Insert sample data  
 - View, add, update, and delete student records via menu
+
+## Demo Video
+A demonstration video showing the functionality of the student management system is included in the project root folder:
