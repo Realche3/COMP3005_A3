@@ -1,71 +1,60 @@
-import psycopg2
+from db.schema import initialize_schema
+from models.student import (
+    get_all_students,
+    add_student,
+    update_student_email,
+    delete_student
+)
 
-conn = psycopg2.connect( host="localhost", dbname ="postgres", user="postgres", password="622950678", port="5432" )
+def menu():
+    print("\nStudent Management Menu")
+    print("1. View all students")
+    print("2. Add a new student")
+    print("3. Update student email")
+    print("4. Delete a student")
+    print("5. Exit")
 
-cur = conn.cursor()
+def main():
+    initialize_schema()
 
-cur.execute("""
-    CREATE TABLE IF NOT EXISTS students (
-       id SERIAL PRIMARY KEY,
-       first_name VARCHAR(50) not null,
-       last_name VARCHAR(50) not null,
-       email VARCHAR(100) UNIQUE not null,
-         enrollment_date DATE
-    );
-""")
+    while True:
+        menu()
+        choice = input("Enter your choice (1–5): ").strip()
 
-cur.execute("""
-   INSERT INTO students (first_name, last_name, email, enrollment_date) VALUES
-('John', 'Doe', 'john.doe@example.com', '2023-09-01'),
-('Jane', 'Smith', 'jane.smith@example.com', '2023-09-01'),
-('Jim', 'Beam', 'jim.beam@example.com', '2023-09-02');
+        if choice == "1":
+            students = get_all_students()
+            print("\nAll Students:")
+            for student in students:
+                print(student)
 
-""")
+        elif choice == "2":
+            print("\nAdd New Student")
+            first_name = input("First name: ").strip()
+            last_name = input("Last name: ").strip()
+            email = input("Email: ").strip()
+            enrollment_date = input("Enrollment date (YYYY-MM-DD): ").strip()
+            add_student(first_name, last_name, email, enrollment_date)
+            print("Student added successfully.")
 
-"""
-    getAllStudents: Fetches and prints all student records from the database.
-    returns: None
-"""
-def getAllStudents():
-    cur.execute("SELECT * FROM students;")
-    rows = cur.fetchall()
-    for row in rows:
-        print(row)
+        elif choice == "3":
+            print("\nUpdate Student Email")
+            student_id = int(input("Student ID: ").strip())
+            new_email = input("New email: ").strip()
+            update_student_email(student_id, new_email)
+            print("Email updated successfully.")
 
-"""
-    addStudent: Adds a new student record to the database.
-    first_name: str - The first name of the student.
-    last_name: str - The last name of the student.
-    email: str - The email address of the student.
-    enrollment_date: str - The enrollment date of the student in 'YYYY-MM-DD' format.
-    
-    returns: None
-"""
-def addStudent(first_name, last_name, email, enrollment_date):
-    cur.execute("""
-        INSERT INTO students (first_name, last_name, email, enrollment_date)
-        VALUES (%s, %s, %s, %s);
-    """, (first_name, last_name, email, enrollment_date))
+        elif choice == "4":
+            print("\nDelete Student")
+            student_id = int(input("Student ID: ").strip())
+            delete_student(student_id)
+            print("Student deleted successfully.")
 
-def updateStudentEmail(student_id, new_email):
-    cur.execute("""
-        UPDATE students
-        SET email = %s
-        WHERE id = %s;
-    """, (new_email, student_id))
+        elif choice == "5":
+            print("Exiting program. Goodbye.")
+            break
 
-def deleteStudent(student_id):
-    cur.execute("""
-        DELETE FROM students
-        WHERE id = %s;
-    """, (student_id,))
-    
+        else:
+            print("Invalid choice. Please enter a number between 1 and 5.")
 
-
-
-
-
-conn.commit()
-cur.close()
-conn.close()
-
+if __name__ == "__main__":
+    main()
